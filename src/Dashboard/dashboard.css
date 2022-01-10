@@ -1,0 +1,30 @@
+.dashboard-card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.dashboard-inner{
+background-color: rgb(205, 224, 231);
+width: 200px;
+margin: 15px;
+justify-content: center;
+align-items: center;
+border-radius: 4px;
+}
+.dashboard-inner>img{
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.price{
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    color: #101011;
+    font-weight: 800;
+    padding: 2px;
+    text-align: center;
+    margin-top: 2px;
+}
