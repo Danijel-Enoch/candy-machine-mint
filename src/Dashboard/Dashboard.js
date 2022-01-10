@@ -46,7 +46,7 @@ function Dashboard() {
                     <div className="dashboard-inner" key={d.id}>
                         <img src={d.img} alt={d.alt} />
                         <div className='price'>
-                            <p>{d.Name}</p><span>$`{d.Price}`$</span>
+                            <p>{d.Name}</p><span>{d.Price}$</span>
                         </div>
                     </div>
 
