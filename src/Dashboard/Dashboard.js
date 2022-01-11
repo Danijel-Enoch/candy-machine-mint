@@ -1,7 +1,28 @@
 import React from 'react'
 import "./dashboard.css"
+import useWalletNfts from '../hooks/use-wallet-nfts';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+const NFTs = require('@primenums/solana-nft-tools');
+const web3 = require("@solana/web3.js");
+
 
 function Dashboard() {
+    const conn = new web3.Connection(
+        web3.clusterApiUrl('devnet'),
+        'confirmed'
+    );
+    const wallet = useWallet();
+    if (
+        !wallet ||
+        !wallet.publicKey ||
+        !wallet.signAllTransactions ||
+        !wallet.signTransaction
+      ) {
+        console.log("happy nnewm ");
+      }
+    console.log(NFTs)
+    let  nfts=NFTs.getNftsForOwner(conn,'EF32NYN6KovcqWWj8QwQmQMd1km8BrF2a1TX7MTjewJU')
+    console.log(nfts);
 
     const Img = [
         {
