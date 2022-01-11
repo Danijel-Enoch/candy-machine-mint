@@ -4,6 +4,8 @@ import Countdown from "react-countdown";
 import { Button, CircularProgress, Snackbar } from "@material-ui/core";
 import Alert from "@material-ui/lab/Alert";
 
+import { NFT } from 'solana-nft'
+
 import * as anchor from "@project-serum/anchor";
 
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
@@ -18,10 +20,19 @@ import {
   mintOneToken,
   shortenAddress,
 } from "./candy-machine";
-
+import { FetchNFTClient } from '@audius/fetch-nft'
+const NFTs = require('@primenums/solana-nft-tools');
+const web3 = require("@solana/web3.js");
+var allMyNFTs:any ;
 const ConnectButton = styled(WalletDialogButton)``;
 
+const conn = new web3.Connection(
+  web3.clusterApiUrl('devnet'),
+  'confirmed'
+);
+
 const CounterText = styled.span``; // add your styles here
+const fetchClient = new FetchNFTClient()
 
 const MintContainer = styled.div``; // add your styles here
 
@@ -56,6 +67,7 @@ const Home = (props: HomeProps) => {
 
   const wallet = useAnchorWallet();
   const [candyMachine, setCandyMachine] = useState<CandyMachine>();
+  
 
   const refreshCandyMachineState = () => {
     (async () => {
@@ -72,7 +84,8 @@ const Home = (props: HomeProps) => {
         props.candyMachineId,
         props.connection
       );
-
+      
+        
       setItemsAvailable(itemsAvailable);
       setItemsRemaining(itemsRemaining);
       setItemsRedeemed(itemsRedeemed);
@@ -82,6 +95,8 @@ const Home = (props: HomeProps) => {
       setCandyMachine(candyMachine);
     })();
   };
+ 
+        
 
   const onMint = async () => {
     try {
@@ -143,18 +158,29 @@ const Home = (props: HomeProps) => {
     } finally {
       if (wallet) {
         const balance = await props.connection.getBalance(wallet.publicKey);
+        console.log(wallet.publicKey.toBase58());
+        
+        
+        
         setBalance(balance / LAMPORTS_PER_SOL);
       }
       setIsMinting(false);
       refreshCandyMachineState();
     }
   };
+  
 
   useEffect(() => {
     (async () => {
       if (wallet) {
         const balance = await props.connection.getBalance(wallet.publicKey);
         setBalance(balance / LAMPORTS_PER_SOL);
+        console.log(wallet.publicKey.toBase58());
+        let allMyNFTs=await NFTs.getNFTsByOwner(conn, wallet.publicKey.toBase58());
+        const myNFTsJSON = JSON.stringify(allMyNFTs);
+        //print NFT Array
+        console.log(allMyNFTs[0].image);
+        console.log(myNFTsJSON);
       }
     })();
   }, [wallet, props.connection]);
@@ -164,6 +190,41 @@ const Home = (props: HomeProps) => {
     props.candyMachineId,
     props.connection,
   ]);
+ 
+  const Img = [
+    {
+        id: 1,
+        img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
+        Name: "Yasuke",
+        Price: 40,
+        alt: "name"
+    },
+    {
+        id: 2,
+        img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
+        Name: "Yasuke",
+        Price: 40,
+        alt: "name"
+    }
+    ,
+    {
+        id: 3,
+        img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
+        Name: "Yasuke",
+        Price: 40,
+        alt: "name"
+    }
+    ,
+
+    {
+        id: 4,
+        img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
+        Name: "Yasuke",
+        Price: 40,
+        alt: "name"
+    }
+]
+ 
 
   return (
     <main>
@@ -222,6 +283,46 @@ const Home = (props: HomeProps) => {
         </Alert>
       </Snackbar>
       </div>
+
+      {/* ///////////////// */}
+
+      <div className="dashboard">
+        {!allMyNFTs?(
+        <div>
+        <h2>if nft is empty/hmm</h2>
+        {Img.map((d) => (
+        <div className="dashboard-inner" key={d.id}>
+            <img src={d.img} alt={d.alt} />
+            <div className='price'>
+                <p>{d.Name}</p><span>{d.Price}$</span>
+            </div>
+        </div>
+
+    ))}
+        </div>
+        ):(
+        <div>
+          <h1> if nft is full/sure</h1>
+          {allMyNFTs.map((a:any,index:any) => (
+        <div className="dashboard-inner" key={a.id}>
+            <img src={a.img} alt={a.alt} />
+            <div className='price'>
+                <p>{a.Name}</p><span>{a.Price}$</span>
+            </div>
+        </div>
+
+    ))}
+          </div>
+        )};
+
+<div className='dashboard-card'>
+    
+</div>
+
+</div>
+
+
+      {/* //////////////////////////// */}
     </main>
   );
 };
@@ -239,5 +340,6 @@ const renderCounter = ({ days, hours, minutes, seconds, completed }: any) => {
     </CounterText>
   );
 };
+
 
 export default Home;

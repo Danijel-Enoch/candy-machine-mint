@@ -25,6 +25,7 @@ import {
 import { WalletDialogProvider } from "@solana/wallet-adapter-material-ui";
 import { createTheme, ThemeProvider } from "@material-ui/core";
 import Dashboard from "../src/Dashboard/Dashboard"
+import MyNfts from "./Dashboard/my-nfts";
 const treasury = new anchor.web3.PublicKey(
   process.env.REACT_APP_TREASURY_ADDRESS!
 );
@@ -105,6 +106,9 @@ const App = () => {
             <BrowserRouter>
              <Routes>
             <Route path= '/Dashboard'element= {<Dashboard/>} />
+            </Routes>
+            <Routes>
+            <Route path= '/nfts'element= {<MyNfts/>} />
             </Routes>
             </BrowserRouter>
           </WalletDialogProvider>
