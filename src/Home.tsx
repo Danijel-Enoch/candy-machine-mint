@@ -24,6 +24,7 @@ import { FetchNFTClient } from '@audius/fetch-nft'
 const NFTs = require('@primenums/solana-nft-tools');
 const web3 = require("@solana/web3.js");
 var allMyNFTs:any ;
+var  fNFT:any;
 const ConnectButton = styled(WalletDialogButton)``;
 
 const conn = new web3.Connection(
@@ -67,6 +68,8 @@ const Home = (props: HomeProps) => {
 
   const wallet = useAnchorWallet();
   const [candyMachine, setCandyMachine] = useState<CandyMachine>();
+
+  const [nftList, setNFTList] = useState<{name: string, id: number, sellerFeeBasisPoints: number, image: string}[]>([]);
   
 
   const refreshCandyMachineState = () => {
@@ -175,15 +178,15 @@ const Home = (props: HomeProps) => {
       if (wallet) {
         const balance = await props.connection.getBalance(wallet.publicKey);
         setBalance(balance / LAMPORTS_PER_SOL);
-        console.log(wallet.publicKey.toBase58());
-        let allMyNFTs=await NFTs.getNFTsByOwner(conn, wallet.publicKey.toBase58());
-        const myNFTsJSON = JSON.stringify(allMyNFTs);
-        //print NFT Array
-        console.log(allMyNFTs[0].image);
-        console.log(myNFTsJSON);
+        setNFTList(await NFTs.getNFTsByOwner(conn, wallet.publicKey.toBase58()));
       }
     })();
   }, [wallet, props.connection]);
+
+  function PrintNft(){
+
+    return <h1>Hello daniel</h1>;
+  }
 
   useEffect(refreshCandyMachineState, [
     wallet,
@@ -195,7 +198,7 @@ const Home = (props: HomeProps) => {
     {
         id: 1,
         img: 'https://images.unsplash.com/photo-1471357674240-e1a485acb3e1',
-        Name: "Yasuke",
+        Name: "dfghjdfghsjd",
         Price: 40,
         alt: "name"
     },
@@ -289,36 +292,28 @@ const Home = (props: HomeProps) => {
       <div className="dashboard">
         {!allMyNFTs?(
         <div>
-        <h2>if nft is empty/hmm</h2>
-        {Img.map((d) => (
+        <h2>My NFts
+        {}
+        </h2>
+        {nftList.map((d) => (
         <div className="dashboard-inner" key={d.id}>
-            <img src={d.img} alt={d.alt} />
+            <img src={d.image} alt={d.name} />
             <div className='price'>
-                <p>{d.Name}</p><span>{d.Price}$</span>
+                <p>{d.name}</p><span>{d.sellerFeeBasisPoints}$</span>
             </div>
         </div>
 
     ))}
         </div>
+        
         ):(
         <div>
-          <h1> if nft is full/sure</h1>
-          {allMyNFTs.map((a:any,index:any) => (
-        <div className="dashboard-inner" key={a.id}>
-            <img src={a.img} alt={a.alt} />
-            <div className='price'>
-                <p>{a.Name}</p><span>{a.Price}$</span>
-            </div>
-        </div>
-
-    ))}
+          
           </div>
         )};
 
-<div className='dashboard-card'>
-    
-</div>
 
+    
 </div>
 
 
